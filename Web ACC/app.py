@@ -174,7 +174,7 @@ def edit_account(id):
     games_query = db.session.query(GameAccount.game_name).distinct().all()
     games = [g[0] for g in games_query] if games_query else []
     # Chia giá cho 1000 để hiển thị trong form (người dùng nhập theo đơn vị ngàn)
-    account_price_display = account.price / 1000
+    account_price_display = (account.price / 1000) if account.price else 0
     return render_template('edit_account.html', account=account, games=games, account_price_display=account_price_display)
 
 @app.route('/account/<int:id>/delete', methods=['POST'])
@@ -215,7 +215,7 @@ def sell_account(id):
             flash(f'Lỗi khi bán account: {str(e)}', 'danger')
     
     # Chia giá cho 1000 để hiển thị trong form (người dùng nhập theo đơn vị ngàn)
-    account_price_display = account.price / 1000
+    account_price_display = (account.price / 1000) if account.price else 0
     return render_template('sell_account.html', account=account, account_price_display=account_price_display)
 
 @app.route('/sales')
