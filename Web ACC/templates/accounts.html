@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Quản Lý Account - Quản Lý Bán Account Game{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-person-badge"></i> Quản Lý Account</h1>
+    <a href="{{ url_for('add_account') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Thêm Account Mới
+    </a>
+</div>
+
+<!-- Bộ lọc -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Trạng Thái</label>
+                <select name="status" class="form-select">
+                    <option value="all" {% if status_filter == 'all' %}selected{% endif %}>Tất Cả</option>
+                    <option value="available" {% if status_filter == 'available' %}selected{% endif %}>Đang Có Sẵn</option>
+                    <option value="sold" {% if status_filter == 'sold' %}selected{% endif %}>Đã Bán</option>
+                    <option value="reserved" {% if status_filter == 'reserved' %}selected{% endif %}>Đã Đặt</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Game</label>
+                <select name="game" class="form-select">
+                    <option value="all" {% if game_filter == 'all' %}selected{% endif %}>Tất Cả</option>
+                    {% for game in games %}
+                    <option value="{{ game }}" {% if game_filter == game %}selected{% endif %}>{{ game }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="bi bi-funnel"></i> Lọc
+                </button>
+                <a href="{{ url_for('accounts') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-clockwise"></i> Reset
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Danh sách account -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Game</th>
+                        <th>Tên Account</th>
+                        <th>Level</th>
+                        <th>Giá</th>
+                        <th>Trạng Thái</th>
+                        <th>Ngày Tạo</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for account in accounts %}
+                    <tr>
+                        <td>{{ account.id }}</td>
+                        <td>{{ account.game_name }}</td>
+                        <td>{{ account.account_name }}</td>
+                        <td>{{ account.level }}</td>
+                        <td>{{ account.price | thousands }}</td>
+                        <td>
+                            {% if account.status == 'available' %}
+                                <span class="badge bg-success">Đang Có Sẵn</span>
+                            {% elif account.status == 'sold' %}
+                                <span class="badge bg-danger">Đã Bán</span>
+                            {% else %}
+                                <span class="badge bg-warning">Đã Đặt</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ account.created_at.strftime('%d/%m/%Y') }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url_for('edit_account', id=account.id) }}" class="btn btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% if account.status == 'available' %}
+                                <a href="{{ url_for('sell_account', id=account.id) }}" class="btn btn-outline-success">
+                                    <i class="bi bi-cart-plus"></i>
+                                </a>
+                                {% endif %}
+                                <form method="POST" action="{{ url_for('delete_account', id=account.id) }}" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa account này?');">
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">Không có account nào</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

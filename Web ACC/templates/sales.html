@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Lịch Sử Bán - Quản Lý Bán Account Game{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-cart-check"></i> Lịch Sử Bán Hàng</h1>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Game</th>
+                        <th>Tên Account</th>
+                        <th>Người Mua</th>
+                        <th>Giá Bán</th>
+                        <th>Ngày Bán</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales %}
+                    <tr>
+                        <td>{{ sale.id }}</td>
+                        <td>{{ sale.account.game_name }}</td>
+                        <td>{{ sale.account.account_name }}</td>
+                        <td>{{ sale.buyer_name or 'N/A' }}</td>
+                        <td>{{ sale.sale_price | thousands }}</td>
+                        <td>{{ sale.sale_date.strftime('%d/%m/%Y %H:%M') }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Chưa có giao dịch nào</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Thêm Account - Quản Lý Bán Account Game{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-plus-circle"></i> Thêm Account Mới</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="game_name" class="form-label">Tên Game <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="game_name" name="game_name" list="games-list" required>
+                <datalist id="games-list">
+                    {% for game in games %}
+                    <option value="{{ game }}">
+                    {% endfor %}
+                </datalist>
+                <small class="form-text text-muted">Nhập tên game hoặc chọn từ danh sách</small>
+            </div>
+            
+            <div class="mb-3">
+                <label for="account_name" class="form-label">Tên Account <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="account_name" name="account_name" required>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="level" class="form-label">Level</label>
+                    <input type="number" class="form-control" id="level" name="level" value="1" min="1" required>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="price" class="form-label">Giá (Nghìn VNĐ) <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="price" name="price" step="0.1" min="0" required>
+                    <small class="form-text text-muted">Nhập số tiền theo đơn vị ngàn (ví dụ: nhập 5 = 5,000 VNĐ, nhập 1.5 = 1,500 VNĐ)</small>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="status" class="form-label">Trạng Thái <span class="text-danger">*</span></label>
+                <select class="form-select" id="status" name="status" required>
+                    <option value="available" selected>Đang Có Sẵn</option>
+                    <option value="reserved">Đã Đặt</option>
+                    <option value="sold">Đã Bán</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="description" class="form-label">Mô Tả</label>
+                <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Thêm Account
+                </button>
+                <a href="{{ url_for('accounts') }}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Hủy
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
